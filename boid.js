@@ -1,11 +1,14 @@
 class Boid {
+	
 	constructor() {
 		this.position = createVector(random(width), random(height));
 		this.velocity = p5.Vector.random2D();
 		this.velocity.setMag(random(2, 4));
+		// this.velocity = createVector(0, 0);
 		this.acceleration = createVector();
-		this.maxForce = .1;
+		this.maxForce = .05;
 		this.maxSpeed = 4;
+		this.r = 8;
 	}
 	
 	edges() {
@@ -31,7 +34,6 @@ class Boid {
 			}
 		});
 		if (count !== 0) {
-			// steering.div(count); 
 			steering.setMag(this.maxSpeed);
 			steering.sub(this.velocity);
 		}
@@ -87,11 +89,6 @@ class Boid {
 		alignment.mult(alignmentWeight);
 		cohesion.mult(cohesionWeight);
 		separation.mult(separationWeight);
-		//.56 -.08 .14
-		//.80 -.07 .12
-		//.71 -.24 .21
-		//.61 -.19 .16
-		
 		
 		this.acceleration = alignment;
 		this.acceleration.add(cohesion);
@@ -106,8 +103,13 @@ class Boid {
 	}
 	
 	show() {
-		strokeWeight(8);
+		strokeWeight(1);
 		stroke(255);
-		point(this.position.x, this.position.y);
+		fill(255, 255, 255, 100);
+		push();
+			translate(this.position);
+			rotate(this.velocity.heading());
+			triangle(-this.r, -this.r/2, -this.r, this.r/2, this.r, 0);
+		pop();
 	}
 }

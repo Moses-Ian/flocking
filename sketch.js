@@ -11,6 +11,7 @@ function setup() {
 	for(let i=0; i<100; i++)
 		flock.push(new Boid());
 	
+	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
 	cohesionWeight = random(-.24, -.07);
 	separationWeight = random(.12, .21);
@@ -18,10 +19,6 @@ function setup() {
 	alignmentPerception = random(59, 76);
 	cohesionPerception = 127;
 	separationPerception = random(168, 189);
-	
-	createP(nf(alignmentPerception, 3, 0));
-	createP(nf(cohesionPerception, 3, 0));
-	createP(nf(separationPerception, 3, 0));
 }
 
 function draw() {
