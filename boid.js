@@ -4,11 +4,36 @@ class Boid {
 		this.position = createVector(random(width), random(height));
 		this.velocity = p5.Vector.random2D();
 		this.velocity.setMag(random(2, 4));
-		// this.velocity = createVector(0, 0);
 		this.acceleration = createVector();
 		this.maxForce = .05;
 		this.maxSpeed = 4;
 		this.r = 8;
+		
+		//ray stuff
+		this.rays = [];
+		for (let a=0; a< 360; a+=10) {
+			this.rays.push(new Ray(this.position, radians(a)));
+		}
+	}
+	
+	look(walls) {
+		this.rays.forEach(ray => {
+			let record = Infinity;
+			let closest = null;
+			walls.forEach(wall => {
+				const pt = ray.cast(wall);
+				// console.log(pt);
+				if (pt.x) {
+					const d = dist(this.position.x, this.position.y, pt.x, pt.y);
+					if (d < record) {
+						record = d;
+						closest = pt;
+					}
+				}
+			});
+			if (closest)
+				ray.show(closest);
+		});
 	}
 	
 	edges() {
@@ -111,5 +136,7 @@ class Boid {
 			rotate(this.velocity.heading());
 			triangle(-this.r, -this.r/2, -this.r, this.r/2, this.r, 0);
 		pop();
+		
+		// this.rays.forEach(ray => ray.show());
 	}
 }
