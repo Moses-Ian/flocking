@@ -11,29 +11,9 @@ class Boid {
 		
 		//ray stuff
 		this.rays = [];
-		for (let a=0; a< 360; a+=10) {
+		for (let a=0; a< 360; a+=20) {
 			this.rays.push(new Ray(this.position, radians(a)));
 		}
-	}
-	
-	look(walls) {
-		this.rays.forEach(ray => {
-			let record = Infinity;
-			let closest = null;
-			walls.forEach(wall => {
-				const pt = ray.cast(wall);
-				// console.log(pt);
-				if (pt.x) {
-					const d = dist(this.position.x, this.position.y, pt.x, pt.y);
-					if (d < record) {
-						record = d;
-						closest = pt;
-					}
-				}
-			});
-			if (closest)
-				ray.show(closest);
-		});
 	}
 	
 	edges() {
@@ -106,18 +86,61 @@ class Boid {
 		return steering;
 	}
 	
-	flock(boids) {
+	avoidance(walls) {
+		let points = this.look(walls);
+		if (points.length === 0) return createVector();
+		let steering = createVector();
+		points.forEach(pt => {
+			let d = this.position.dist(pt);
+			let diff = p5.Vector.sub(this.position, pt);
+			diff.div(d);
+			steering.add(diff);
+		});
+		steering.div(points.length);
+		steering.setMag(this.maxSpeed);
+		steering.sub(this.velocity);
+		return steering;
+	}
+	
+	look(walls) {
+		let points = [];
+		this.rays.forEach(ray => {
+			let record = Infinity;
+			let closest = null;
+			walls.forEach(wall => {
+				const pt = ray.cast(wall);
+				// console.log(pt);
+				if (pt.x) {
+					const d = dist(this.position.x, this.position.y, pt.x, pt.y);
+					if (d < record) {
+						record = d;
+						closest = pt;
+					}
+				}
+			});
+			if (closest) {
+				points.push(createVector(closest.x, closest.y));
+				ray.show(closest);
+			}
+		});
+		return points;
+	}
+	
+	flock(boids, obstacles) {
 		let alignment = this.align(boids);
 		let cohesion = this.cohesion(boids);
 		let separation = this.separation(boids);
+		let avoidance = this.avoidance(obstacles);
 		
 		alignment.mult(alignmentWeight);
 		cohesion.mult(cohesionWeight);
 		separation.mult(separationWeight);
+		avoidance.mult(1.2);
 		
 		this.acceleration = alignment;
 		this.acceleration.add(cohesion);
 		this.acceleration.add(separation);
+		this.acceleration.add(avoidance);
 		this.acceleration.limit(this.maxForce);
 	}
 	

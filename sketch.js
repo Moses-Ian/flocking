@@ -8,14 +8,14 @@ let collisionPerception;
 
 function setup() {
   // put setup code here
-	let canvas = createCanvas(640, 360);
+	let canvas = createCanvas(1080, 920);
 	canvas.parent('sketch-container');
 
-	collisionPerception = 200;
+	collisionPerception = 75;
 	
 	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
-	cohesionWeight = random(-.24, -.07);
+	cohesionWeight = random(.24, .07);
 	separationWeight = random(.12, .21);
 	
 	alignmentPerception = random(59, 76);
@@ -33,7 +33,7 @@ function setup() {
 	}
 
 	//create boids
-	for(let i=0; i<5; i++)
+	for(let i=0; i<100; i++)
 		flock.push(new Boid());
 	
 	
@@ -48,8 +48,7 @@ function draw() {
 	
 	//boids
 	flock.map(boid => {
-		boid.look(obstacles);
-		boid.flock(flock);
+		boid.flock(flock, obstacles);
 		boid.update();
 		boid.edges();
 		return boid;
