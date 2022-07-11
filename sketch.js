@@ -15,12 +15,17 @@ function setup() {
 	let canvas = createCanvas(800, 600);
 	canvas.parent('sketch-container');
 
-	collisionPerception = 75;
+	collisionPerception = 300;
 	
 	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
-	cohesionWeight = random(.24, .07);
+	cohesionWeight = random(.07, .24);
 	separationWeight = random(.18, .21);
+	createP(`
+		${nf(alignmentWeight, 0, 2)}
+		${nf(cohesionWeight, 0, 2)}
+		${nf(separationWeight, 0, 2)}`
+	);
 	
 	alignmentPerception = random(59, 76);
 	cohesionPerception = 127;
@@ -30,13 +35,12 @@ function setup() {
 	boundary = new Rectangle(width/2, height/2, width/2, height/2);
 
 	//create obstacles
-	for (let i=0; i<0; i++) {
-		obstacles.push(new Boundary(
-			random(width),
-			random(height),
-			random(width),
-			random(height)
-		));
+	for (let i=0; i<5; i++) {
+		let x1 = random(150, width-150);
+		let y1 = random(150, height-150);
+		let x2 = random(x1-100, x1+100);
+		let y2 = random(y1-100, y1+100);
+		obstacles.push(new Boundary(x1, y1, x2, y2));
 	}
 
 	//create boids
@@ -61,12 +65,18 @@ function draw() {
 			maxBoidPerception
 		);
 		let closeBoids = qt.query(range);
-		// boid.flock(flock, obstacles);
 		boid.flock(closeBoids, obstacles);
 		boid.update();
 		boid.edges();
 		qt.insert(boid);
 	});
+	
+	//boid rays
+	// flock.forEach(boid => {
+		// boid.rays.forEach(ray => {
+			// ray.show();
+		// });
+	// });
 	
 	//quadtree
 	// qt.show();

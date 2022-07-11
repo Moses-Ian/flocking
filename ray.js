@@ -21,7 +21,16 @@ class Ray {
 		return hit;
 	}
 	
+	rotate(angle) {
+		this.dir.rotate(angle);
+	}
+	
 	show(pt) {
+		if (!pt)
+			pt = {
+				x: this.pos.x + this.dir.x,
+				y: this.pos.y + this.dir.y
+			};
 		stroke(255, 255, 255, 50);
 		push();
 			line(
