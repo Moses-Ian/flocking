@@ -162,4 +162,17 @@ class Boid {
 		
 		// this.rays.forEach(ray => ray.show());
 	}
+
+	highlight() {
+		strokeWeight(1);
+		stroke(255);
+		fill(0, 255, 0, 100);
+		push();
+			translate(this.position);
+			rotate(this.velocity.heading());
+			triangle(-this.r, -this.r/2, -this.r, this.r/2, this.r, 0);
+		pop();
+		
+		// this.rays.forEach(ray => ray.show());
+	}
 }

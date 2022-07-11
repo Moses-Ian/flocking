@@ -53,15 +53,42 @@ function draw() {
 	
 	//boids
 	flock.forEach(boid => {
-		boid.flock(flock, obstacles);
-		boid.update();
-		boid.edges();
+		// boid.flock(flock, obstacles);
+		// boid.update();
+		// boid.edges();
 		qt.insert(boid);
-		return boid;
+		// return boid;
 	});
 	
 	//quadtree
 	qt.show();
 	
+	//test rectangle
+	stroke(0, 255, 0);
+	rectMode(CENTER);
+	let range = new Rectangle(mouseX, mouseY, 25, 25);
+	rect(range.x, range.y, range.w*2, range.h*2);
+	let points = qt.query(range);
+	// console.log(points);
+	
 	flock.forEach(boid => boid.show());
+	points.forEach(boid => boid.highlight());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

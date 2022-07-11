@@ -24,6 +24,14 @@ class Rectangle {
 			point.position.y >= this.y - this.h &&
 			point.position.y < this.y + this.h);
 	}
+	
+	intersects(range) {
+		//change to accept range as a circle
+		return !(range.x - range.w > this.x + this.w || //range left > this right
+			range.x + range.w < this.x - this.w || 		//range right < this left
+			range.y - range.h > this.y + this.h || 		//range top < this bottom
+			range.y + range.h < this.y - this.h) 			//range bottom > this top
+	}
 }
 
 class QuadTree {
@@ -63,6 +71,27 @@ class QuadTree {
 			this.sw.insert(point);
 			this.se.insert(point);
 		} 
+	}
+	
+	query(range) {
+		let found = [];
+		
+		if (!this.boundary.intersects(range)) return found;	
+		
+		this.points.forEach(p => {
+			if (range.contains(p)) {
+				found.push(p);
+			}
+		});
+		
+		if (this.divided) {
+			found = found.concat(this.nw.query(range));
+			found = found.concat(this.ne.query(range));
+			found = found.concat(this.sw.query(range));
+			found = found.concat(this.se.query(range));
+		}
+		
+		return found;
 	}
 	
 	show() {
