@@ -5,13 +5,14 @@ let qt;
 
 let alignmentWeight, cohesionWeight, separationWeight;
 let alignmentPerception, cohesionPerception, separationPerception;
+let maxBoidPerception;
 let collisionPerception;
 
 let boundary;
 
 function setup() {
   // put setup code here
-	let canvas = createCanvas(400, 400);
+	let canvas = createCanvas(800, 600);
 	canvas.parent('sketch-container');
 
 	collisionPerception = 75;
@@ -19,11 +20,12 @@ function setup() {
 	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
 	cohesionWeight = random(.24, .07);
-	separationWeight = random(.12, .21);
+	separationWeight = random(.18, .21);
 	
 	alignmentPerception = random(59, 76);
 	cohesionPerception = 127;
 	separationPerception = random(168, 189);
+	maxBoidPerception = max([alignmentPerception, cohesionPerception, separationPerception]);
 
 	boundary = new Rectangle(width/2, height/2, width/2, height/2);
 
@@ -38,7 +40,7 @@ function setup() {
 	}
 
 	//create boids
-	for(let i=0; i<200; i++)
+	for(let i=0; i<250; i++)
 		flock.push(new Boid());
 }
 
@@ -53,26 +55,33 @@ function draw() {
 	
 	//boids
 	flock.forEach(boid => {
+		let range = new Circle(
+			boid.position.x, 
+			boid.position.y, 
+			maxBoidPerception
+		);
+		let closeBoids = qt.query(range);
 		// boid.flock(flock, obstacles);
-		// boid.update();
-		// boid.edges();
+		boid.flock(closeBoids, obstacles);
+		boid.update();
+		boid.edges();
 		qt.insert(boid);
-		// return boid;
 	});
 	
 	//quadtree
-	qt.show();
-	
-	//test rectangle
-	stroke(0, 255, 0);
-	rectMode(CENTER);
-	let range = new Rectangle(mouseX, mouseY, 25, 25);
-	rect(range.x, range.y, range.w*2, range.h*2);
-	let points = qt.query(range);
-	// console.log(points);
+	// qt.show();
 	
 	flock.forEach(boid => boid.show());
-	points.forEach(boid => boid.highlight());
+
+	//test circle
+	// stroke(0, 255, 0);
+	// ellipseMode(CENTER);
+	// let range = new Circle(mouseX, mouseY, maxBoidPerception);
+	// circle(range.x, range.y, range.r);
+	// let points = qt.query(range);
+	// points.forEach(boid => boid.highlight());
+	
+	// console.log(frameRate());
 }
 
 

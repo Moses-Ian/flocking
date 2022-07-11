@@ -130,17 +130,17 @@ class Boid {
 		let alignment = this.align(boids);
 		let cohesion = this.cohesion(boids);
 		let separation = this.separation(boids);
-		let avoidance = this.avoidance(obstacles);
+		// let avoidance = this.avoidance(obstacles);
 		
 		alignment.mult(alignmentWeight);
 		cohesion.mult(cohesionWeight);
 		separation.mult(separationWeight);
-		avoidance.mult(1.2);
+		// avoidance.mult(1.2);
 		
 		this.acceleration = alignment;
 		this.acceleration.add(cohesion);
 		this.acceleration.add(separation);
-		this.acceleration.add(avoidance);
+		// this.acceleration.add(avoidance);
 		this.acceleration.limit(this.maxForce);
 	}
 	

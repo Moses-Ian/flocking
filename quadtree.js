@@ -1,19 +1,9 @@
-class Point {
-	constructor(x,y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	show() {
-		strokeWeight(4);
-		point(this.x, this.y);
-	}
-}
-
 class Rectangle {
 	constructor(x,y,w,h) {
+		//rectmode center
 		this.x = x;
 		this.y = y;
+		//half the total width/height
 		this.w = w;
 		this.h = h;
 	}
@@ -27,10 +17,34 @@ class Rectangle {
 	
 	intersects(range) {
 		//change to accept range as a circle
-		return !(range.x - range.w > this.x + this.w || //range left > this right
-			range.x + range.w < this.x - this.w || 		//range right < this left
-			range.y - range.h > this.y + this.h || 		//range top < this bottom
-			range.y + range.h < this.y - this.h) 			//range bottom > this top
+		return collideRectCircle(
+			this.x - this.w,
+			this.y - this.h,
+			this.w*2,
+			this.h*2,
+			range.x,
+			range.y,
+			range.r
+		);
+	}
+}
+
+class Circle {
+	constructor(x,y,r) {
+		//ellipsemode center
+		this.x = x;
+		this.y = y;
+		this.r = r;
+	}
+	
+	contains(point) {
+		return collidePointCircle(
+			point.position.x,
+			point.position.y,
+			this.x,
+			this.y,
+			this.r
+		);
 	}
 }
 
