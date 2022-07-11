@@ -1,14 +1,17 @@
 const flock = [];
 const obstacles = [];
 let ray;
+let qt;
 
 let alignmentWeight, cohesionWeight, separationWeight;
 let alignmentPerception, cohesionPerception, separationPerception;
 let collisionPerception;
 
+let boundary;
+
 function setup() {
   // put setup code here
-	let canvas = createCanvas(1080, 920);
+	let canvas = createCanvas(400, 400);
 	canvas.parent('sketch-container');
 
 	collisionPerception = 75;
@@ -22,8 +25,10 @@ function setup() {
 	cohesionPerception = 127;
 	separationPerception = random(168, 189);
 
+	boundary = new Rectangle(width/2, height/2, width/2, height/2);
+
 	//create obstacles
-	for (let i=0; i<5; i++) {
+	for (let i=0; i<0; i++) {
 		obstacles.push(new Boundary(
 			random(width),
 			random(height),
@@ -33,13 +38,13 @@ function setup() {
 	}
 
 	//create boids
-	for(let i=0; i<100; i++)
+	for(let i=0; i<200; i++)
 		flock.push(new Boid());
-	
-	
 }
 
 function draw() {
+	qt = new QuadTree(boundary);
+	
   // background
 	background(51);
 	
@@ -47,12 +52,16 @@ function draw() {
 	obstacles.forEach(wall => wall.show());
 	
 	//boids
-	flock.map(boid => {
+	flock.forEach(boid => {
 		boid.flock(flock, obstacles);
 		boid.update();
 		boid.edges();
+		qt.insert(boid);
 		return boid;
 	});
+	
+	//quadtree
+	qt.show();
 	
 	flock.forEach(boid => boid.show());
 }
