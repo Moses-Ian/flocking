@@ -58,6 +58,33 @@ class Obstacle {
 		for (let i=0; i<this.total; i++) {
 			this.offset[i] = random(-10, 10);
 		}
+		this.triangles = [];
+		for (let i=0; i<this.total-1; i++) {
+			let angle2 = map(i, 0, this.total, 0, TWO_PI);
+			let r2 = this.r + this.offset[i];
+			let x2 = r2 * cos(angle2) + this.pos.x;
+			let y2 = r2 * sin(angle2) + this.pos.y;
+			let angle3 = map(i+1, 0, this.total, 0, TWO_PI);
+			let r3 = this.r + this.offset[i+1];
+			let x3 = r3 * cos(angle3) + this.pos.x;
+			let y3 = r3 * sin(angle3) + this.pos.y;
+			this.triangles.push({
+				x1: this.pos.x, 
+				y1: this.pos.y, 
+				x2, 
+				y2,
+				x3, 
+				y3
+			});
+		}
+		this.triangles.push({
+			x1: this.pos.x,
+			y1: this.pos.y,
+			x2: this.triangles[this.triangles.length-1].x3,
+			y2: this.triangles[this.triangles.length-1].y3,
+			x3: this.triangles[0].x2,
+			y3: this.triangles[0].y2
+		})
 	}
 	
 	getBoundaries() {
@@ -97,4 +124,25 @@ class Obstacle {
 		}
 		endShape(CLOSE);
 	}
+	
+	highlight(t) {
+		push();
+			strokeWeight(1);
+			fill(0, 255, 0, 50);
+			stroke(0, 255, 0);
+			triangle(t.x1, t.y1, t.x2, t.y2, t.x3, t.y3);
+		pop();
+	}
+	
+	showTriangles() {
+		push();
+			strokeWeight(1);
+			fill(0, 255, 0, 50);
+			stroke(0, 255, 0);
+			this.triangles.forEach(t => triangle(t.x1, t.y1, t.x2, t.y2, t.x3, t.y3));
+		pop();
+	}
 }
+
+
+

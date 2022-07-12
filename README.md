@@ -31,6 +31,8 @@ Each boid tries at every frame to do 5 things:
 
 Each of these represents a force, and accumulates the boid's acceleration for this frame. The acceleration is the limited to a maximum, to simulate a real bird's ability to only generate a certain amount of thrust.
 
+Finally, the obstacles have collision detection.
+
 ### Speed Up
 
 Boids try to set their velocity to their max speed.
@@ -52,6 +54,10 @@ Boids try to maintain distance between themselves and their neighbors.
 When boids see an obstacle, they try to align their velocity in the direction of the wall. In a naive approach, they end up being 'funnelled' into corners. If they remember the first location where they saw a wall, then they can instead try to align their velocity in the direction of a line created by their remembered point and the point where they currently see the wall.
 
 This is my favorite to visualize.
+
+### Collision
+
+Each obstacle is made up of a set of triangles. Each triangle has (x1, y1) as the obstacle's center, and (x2,y2) (x3,y3) make up the edge. Each frame, each boid is checked against each triangle for collision. If they collide, the boid is moved away. The direction is set by the difference between the boid's position and the triangle's (x1,y1). The magnitude is set by the distance between the boid's position and the line set by (x2,y2), (x3,y3). The position vector is then adjusted by that movement vector.
 
 ## Brief Explanation of the QuadTree
 

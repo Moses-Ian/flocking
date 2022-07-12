@@ -191,6 +191,46 @@ class Boid {
 		this.ray.rotate(angle);
 	}
 	
+	collisions() {
+		// see if i've collided with any triangles
+		obstacles.forEach(obst => {
+			obst.triangles.forEach(tri => {
+				let hit = collidePointTriangle(
+					this.position.x, this.position.y,
+					tri.x1, tri.y1,
+					tri.x2, tri.y2,
+					tri.x3, tri.y3
+				);
+				if (hit) {
+					if (checkboxes[5].checked())
+						obst.highlight(tri);
+					this.collide(tri);
+				}
+			});
+		});
+	}
+	
+	collide(tri) {
+		
+		let {x1, y1, x2, y2, x3, y3} = tri;
+		
+		// determine the movement direction vector
+		// position - center of obstacle (x1,y1)
+		let steering = p5.Vector.sub(this.position, createVector(tri.x1, tri.y1));
+		
+		// determine the movement distance
+		// distance between a point (position) and a line (x2,y2), (x3,y3)
+		let distance = abs( (x3-x2) * (y2-this.position.y) - (x2-this.position.x) * (y3-y2) );
+		distance /= sqrt( (x3-x2)*(x3-x2) + (y3-y2)*(y3-y2) )
+		
+		// move me
+		steering.setMag(distance);
+		this.position.add(steering);
+		
+		
+		// adjust my velocity?
+	}
+	
 	flock(boids, obstacles) {
 		let speedUp = this.speedUp();
 		let alignment = this.align(boids);
@@ -214,6 +254,7 @@ class Boid {
 	update() {
 		let oldVelocity = createVector(this.velocity.x, this.velocity.y);
 		this.position.add(this.velocity);
+		this.collisions();
 		this.velocity.add(this.acceleration);
 		this.velocity.limit(this.maxSpeed);
 		this.rotateRay(oldVelocity.angleBetween(this.velocity));
@@ -245,10 +286,10 @@ class Boid {
 	}
 
 	highlight() {
-		strokeWeight(1);
-		stroke(255);
-		fill(0, 255, 0, 100);
 		push();
+			strokeWeight(1);
+			stroke(255);
+			fill(0, 255, 0, 100);
 			translate(this.position);
 			rotate(this.velocity.heading());
 			triangle(-this.r, -this.r/2, -this.r, this.r/2, this.r, 0);
