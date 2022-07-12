@@ -25,6 +25,19 @@ class Ray {
 		this.dir.rotate(angle);
 	}
 	
+	getLine() {
+		return {
+			a: {
+				x: this.pos.x,
+				y: this.pos.y
+			},
+			b: {
+				x: this.pos.x + this.dir.x,
+				y: this.pos.y + this.dir.y
+			}
+		}
+	}
+	
 	show(pt) {
 		if (!pt)
 			pt = {

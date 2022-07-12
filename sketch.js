@@ -1,8 +1,8 @@
 const flock = [];
 let obstacles = [];
-let boundaries = [];
 let ray;
 let qt;
+let qtb;
 
 let alignmentWeight, cohesionWeight, separationWeight;
 let alignmentPerception, cohesionPerception, separationPerception;
@@ -10,18 +10,20 @@ let maxBoidPerception;
 let collisionPerception;
 
 let boundary;
+let obstacleChecks;
 
 function setup() {
   // put setup code here
-	let canvas = createCanvas(400, 600);
+	let canvas = createCanvas(800, 600);
 	canvas.parent('sketch-container');
 
-	collisionPerception = 300;
+	collisionPerception = 200;
 	
 	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
 	cohesionWeight = random(.07, .24);
 	separationWeight = random(.18, .21);
+	//bad .70 .18 .19
 	createP(`
 		${nf(alignmentWeight, 0, 2)}
 		${nf(cohesionWeight, 0, 2)}
@@ -36,16 +38,17 @@ function setup() {
 	boundary = new Rectangle(width/2, height/2, width/2, height/2);
 
 	//create obstacles
+	qtb = new QuadTreeBoundaries(boundary);
 	for (let i=0; i<5; i++) {
 		obstacles.push(new Obstacle());
 	}
 	obstacles.forEach(obst => {
-		boundaries = boundaries.concat(obst.getBoundaries());
+		let boundaries = obst.getBoundaries();
+		boundaries.forEach(b => qtb.insert(b));
 	});
-	// console.log(boundaries);
 
 	//create boids
-	for(let i=0; i<100; i++)
+	for(let i=0; i<250; i++)
 		flock.push(new Boid());
 }
 
@@ -54,10 +57,10 @@ function draw() {
 	
   // background
 	background(51);
+	// qtb.show();
 	
 	//obstacles
 	obstacles.forEach(obst => obst.show());
-	// boundaries.forEach(obst => obst.show());
 	
 	//boids
 	flock.forEach(boid => {
@@ -67,8 +70,9 @@ function draw() {
 			maxBoidPerception
 		);
 		let closeBoids = qt.query(range);
-		boid.flock(closeBoids, boundaries);
-		boid.update();
+		let closeBoundaries = qtb.query(boid.ray.getLine());
+		// closeBoundaries.forEach(cb => cb.highlight());
+		boid.flock(closeBoids, closeBoundaries);
 		boid.edges();
 		qt.insert(boid);
 	});
@@ -83,7 +87,10 @@ function draw() {
 	//quadtree
 	// qt.show();
 	
-	flock.forEach(boid => boid.show());
+	flock.forEach(boid => {
+		boid.update();
+		boid.show()
+	});
 
 	//test circle
 	// stroke(0, 255, 0);

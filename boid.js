@@ -130,9 +130,7 @@ class Boid {
 				}
 			}
 		});
-		if (closest) {
-			this.ray.show(closest.pt);
-		}
+		// if (closest) this.ray.show(closest.pt);
 		return closest;
 	}
 

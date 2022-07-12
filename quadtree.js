@@ -15,16 +15,73 @@ class Rectangle {
 			point.position.y < this.y + this.h);
 	}
 	
+	containsLine(line) {
+		let aIsIn = (
+			line.a.x < this.x + this.w &&
+			line.a.x > this.x - this.w &&
+			line.a.y < this.y + this.h &&
+			line.a.y > this.y - this.h
+		);
+		let bIsIn = (
+			line.b.x < this.x + this.w &&
+			line.b.x > this.x - this.w &&
+			line.b.y < this.y + this.h &&
+			line.b.y > this.y - this.h
+		);
+			
+		// if (!aIsIn && !bIsIn) return false;
+		if (aIsIn && bIsIn) return true;
+		
+		let hit = collideLineRect(
+			line.a.x, line.a.y,
+			line.b.x, line.b.y,
+			this.x - this.w, this.y - this.h,
+			this.w*2, this.h*2,
+			true
+		);
+		return hit;
+	}	
+
 	intersects(range) {
-		//change to accept range as a circle
-		return collideRectCircle(
-			this.x - this.w,
-			this.y - this.h,
-			this.w*2,
-			this.h*2,
-			range.x,
-			range.y,
-			range.r
+		// return collideRectCircle(
+			// this.x - this.w,
+			// this.y - this.h,
+			// this.w*2,
+			// this.h*2,
+			// range.x,
+			// range.y,
+			// range.r
+		// );
+		return !(
+			range.x - range.r > this.x + this.w &&
+			range.x + range.r < this.x - this.w &&
+			range.y - range.r > this.y + this.h &&
+			range.y + range.r < this.y - this.h 
+		);
+	}
+	
+	intersectsLine(line) {
+		let aIsIn = (
+			line.a.x < this.x + this.w &&
+			line.a.x > this.x - this.w &&
+			line.a.y < this.y + this.h &&
+			line.a.y > this.y - this.h
+		);
+		let bIsIn = (
+			line.b.x < this.x + this.w &&
+			line.b.x > this.x - this.w &&
+			line.b.y < this.y + this.h &&
+			line.b.y > this.y - this.h
+		);
+			
+		// if (!aIsIn && !bIsIn) return false;
+		if (aIsIn && bIsIn) return true;
+		
+		return collideLineRect(
+			line.a.x, line.a.y,
+			line.b.x, line.b.y,
+			this.x - this.w, this.y - this.h,
+			this.w*2,	this.h*2
 		);
 	}
 }
@@ -124,7 +181,103 @@ class QuadTree {
 	}
 }
 
+class QuadTreeBoundaries {
+	constructor(boundary) {
+		this.boundary = boundary;
+		this.capacity = 1;
+		this.lines = [];
+		this.divided = false;
+	}
+	
+	subdivide() {
+		let {x, y, w, h} = this.boundary;
+		
+		let nw = new Rectangle(x+w/2, y-h/2, w/2, h/2);
+		let ne = new Rectangle(x-w/2, y-h/2, w/2, h/2);
+		let sw = new Rectangle(x+w/2, y+h/2, w/2, h/2);
+		let se = new Rectangle(x-w/2, y+h/2, w/2, h/2);
+		this.nw = new QuadTreeBoundaries(nw);
+		this.ne = new QuadTreeBoundaries(ne);
+		this.sw = new QuadTreeBoundaries(sw);
+		this.se = new QuadTreeBoundaries(se);
 
+		this.divided = true;
+	}
+	
+	insert(line) {
+		let hit = this.boundary.containsLine(line);
+		// console.log(line, this.boundary, hit);
+		if (!hit) return;
+		if (hit !== true && !hit.left.x && !hit.top.x && !hit.right.x && !hit.bottom.x)
+				return;
+		
+		if (this.lines.length < this.capacity) {
+			if (hit === true) 
+				this.lines.push(line);
+			else {
+				let segments = line.split(hit);
+				if (!segments) {
+					console.log(line, hit, this.boundary);
+					return;
+				}
+				// console.log(s1, s2);
+				this.insert(segments[0]);
+				this.insert(segments[1]);
+			}
+		} else {
+			if (!this.divided)
+				this.subdivide();
+			this.nw.insert(line);
+			this.ne.insert(line);
+			this.sw.insert(line);
+			this.se.insert(line);			
+		}
+	}
+	
+	query(queryLine) {
+		let found = [];
+		
+		if (!this.boundary.intersectsLine(queryLine)) return found;
+		
+		// this.highlight();
+		this.lines.forEach(l => {
+			found.push(l);
+		});
+		
+		if (this.divided) {
+			found = found.concat(this.nw.query(queryLine));
+			found = found.concat(this.ne.query(queryLine));
+			found = found.concat(this.sw.query(queryLine));
+			found = found.concat(this.se.query(queryLine));
+		}
+		
+		return found;
+	}
+	
+	show() {
+		stroke(255);
+		noFill();
+		strokeWeight(1);
+		rectMode(CENTER);
+		rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+		if (this.divided) {
+			this.nw.show();
+			this.ne.show();
+			this.sw.show();
+			this.se.show();
+		}
+		
+		// this.lines.forEach(line => line.highlight());
+	}
+	
+	highlight() {
+		stroke(0, 255, 0);
+		noFill();
+		strokeWeight(1);
+		rectMode(CENTER);
+		rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+	}
+}
 
 
 
