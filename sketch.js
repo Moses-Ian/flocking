@@ -1,5 +1,6 @@
 const flock = [];
-const obstacles = [];
+let obstacles = [];
+let boundaries = [];
 let ray;
 let qt;
 
@@ -12,7 +13,7 @@ let boundary;
 
 function setup() {
   // put setup code here
-	let canvas = createCanvas(800, 600);
+	let canvas = createCanvas(400, 600);
 	canvas.parent('sketch-container');
 
 	collisionPerception = 300;
@@ -36,15 +37,15 @@ function setup() {
 
 	//create obstacles
 	for (let i=0; i<5; i++) {
-		let x1 = random(150, width-150);
-		let y1 = random(150, height-150);
-		let x2 = random(x1-100, x1+100);
-		let y2 = random(y1-100, y1+100);
-		obstacles.push(new Boundary(x1, y1, x2, y2));
+		obstacles.push(new Obstacle());
 	}
+	obstacles.forEach(obst => {
+		boundaries = boundaries.concat(obst.getBoundaries());
+	});
+	// console.log(boundaries);
 
 	//create boids
-	for(let i=0; i<250; i++)
+	for(let i=0; i<100; i++)
 		flock.push(new Boid());
 }
 
@@ -55,7 +56,8 @@ function draw() {
 	background(51);
 	
 	//obstacles
-	obstacles.forEach(wall => wall.show());
+	obstacles.forEach(obst => obst.show());
+	// boundaries.forEach(obst => obst.show());
 	
 	//boids
 	flock.forEach(boid => {
@@ -65,7 +67,7 @@ function draw() {
 			maxBoidPerception
 		);
 		let closeBoids = qt.query(range);
-		boid.flock(closeBoids, obstacles);
+		boid.flock(closeBoids, boundaries);
 		boid.update();
 		boid.edges();
 		qt.insert(boid);

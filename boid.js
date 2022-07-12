@@ -9,6 +9,9 @@ class Boid {
 		this.maxSpeed = 4;
 		this.r = 8;
 		
+		//ray stuff 2
+		this.ray = new Ray(this.position, this.velocity.heading());
+
 		//ray stuff
 		// let spacing = PI / 10;
 		// this.rays = [];
@@ -17,8 +20,6 @@ class Boid {
 			// this.rays.push(new Ray(this.position, a));
 		// }
 		
-		//ray stuff 2
-		this.ray = new Ray(this.position, this.velocity.heading());
 	}
 	
 	edges() {
