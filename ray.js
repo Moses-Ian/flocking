@@ -44,14 +44,13 @@ class Ray {
 				x: this.pos.x + this.dir.x,
 				y: this.pos.y + this.dir.y
 			};
-		stroke(255, 255, 255, 50);
-		push();
-			line(
-				this.pos.x, 
-				this.pos.y, 
-				pt.x, 
-				pt.y
-			);
-		pop();
+		point(pt.x, pt.y);
+		strokeWeight(1);
+		line(
+			this.pos.x, 
+			this.pos.y, 
+			pt.x, 
+			pt.y
+		);
 	}
 }

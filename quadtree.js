@@ -166,18 +166,20 @@ class QuadTree {
 	}
 	
 	show() {
-		stroke(255);
-		noFill();
-		strokeWeight(1);
-		rectMode(CENTER);
-		rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
-		if (this.divided) {
-			this.nw.show();
-			this.ne.show();
-			this.sw.show();
-			this.se.show();
-		}
-		this.points.forEach(pt => pt.show());
+		push();
+			stroke(255);
+			noFill();
+			strokeWeight(1);
+			rectMode(CENTER);
+			rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+			if (this.divided) {
+				this.nw.show();
+				this.ne.show();
+				this.sw.show();
+				this.se.show();
+			}
+			// this.points.forEach(pt => pt.show());
+		pop();
 	}
 }
 
@@ -234,48 +236,53 @@ class QuadTreeBoundaries {
 		}
 	}
 	
-	query(queryLine) {
+	query(queryLine, highlight=false) {
 		let found = [];
 		
 		if (!this.boundary.intersectsLine(queryLine)) return found;
 		
-		// this.highlight();
+		if (highlight) this.highlight();
+		
 		this.lines.forEach(l => {
 			found.push(l);
 		});
 		
 		if (this.divided) {
-			found = found.concat(this.nw.query(queryLine));
-			found = found.concat(this.ne.query(queryLine));
-			found = found.concat(this.sw.query(queryLine));
-			found = found.concat(this.se.query(queryLine));
+			found = found.concat(this.nw.query(queryLine, highlight));
+			found = found.concat(this.ne.query(queryLine, highlight));
+			found = found.concat(this.sw.query(queryLine, highlight));
+			found = found.concat(this.se.query(queryLine, highlight));
 		}
 		
 		return found;
 	}
 	
 	show() {
-		stroke(255);
-		noFill();
-		strokeWeight(1);
-		rectMode(CENTER);
-		rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
-		if (this.divided) {
-			this.nw.show();
-			this.ne.show();
-			this.sw.show();
-			this.se.show();
-		}
-		
-		// this.lines.forEach(line => line.highlight());
+		push();
+			stroke(255);
+			noFill();
+			strokeWeight(1);
+			rectMode(CENTER);
+			rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+			if (this.divided) {
+				this.nw.show();
+				this.ne.show();
+				this.sw.show();
+				this.se.show();
+			}
+			
+			// this.lines.forEach(line => line.highlight());
+		pop();
 	}
 	
 	highlight() {
-		stroke(0, 255, 0);
-		noFill();
-		strokeWeight(1);
-		rectMode(CENTER);
-		rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+		push();
+			stroke(0, 255, 0);
+			noFill();
+			strokeWeight(1);
+			rectMode(CENTER);
+			rect(this.boundary.x, this.boundary.y, this.boundary.w*2, this.boundary.h*2);
+		pop();
 	}
 }
 

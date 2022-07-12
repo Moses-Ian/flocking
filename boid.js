@@ -7,7 +7,7 @@ class Boid {
 		this.acceleration = createVector();
 		this.maxForce = .05;
 		this.maxSpeed = 4;
-		this.r = 8;
+		this.r = boidSize;
 		
 		//ray stuff 2
 		this.ray = new Ray(this.position, this.velocity.heading());
@@ -24,14 +24,14 @@ class Boid {
 	}
 	
 	edges() {
-		if (this.position.x > width)
-			this.position.x = 0;
-		else if (this.position.x < 0)
-			this.position.x = width;
-		if (this.position.y > height)
-			this.position.y = 0;
-		else if (this.position.y < 0)
-			this.position.y = height;
+		if (this.position.x > width + this.r)
+			this.position.x = -this.r;
+		else if (this.position.x < -this.r)
+			this.position.x = width + this.r;
+		if (this.position.y > height + this.r)
+			this.position.y = -this.r;
+		else if (this.position.y < -this.r)
+			this.position.y = height + this.r;
 	}
 	
 	speedUp() {
@@ -141,7 +141,17 @@ class Boid {
 				}
 			}
 		});
-		// if (closest) this.ray.show(closest.pt);
+		if (this.focus && checkboxes[1].checked()) 
+			if (closest) {
+				push();
+					strokeWeight(4);
+					stroke(0, 255, 0);
+					if (this.memory)
+						point(this.memory.x, this.memory.y);
+					this.ray.show(closest.pt);
+				pop();
+				
+			}
 		return closest;
 	}
 
@@ -222,13 +232,16 @@ class Boid {
 		
 		// this.rays.forEach(ray => ray.show());
 		// this.ray.show();
-		// if (this.memory) {
-			// push();
-				// strokeWeight(4);
-				// stroke(0, 255, 0);
-				// point(this.memory.x, this.memory.y);
-			// pop();
+		// if (this.focus && checkboxes[1].checked()) {
+			// if (this.memory) {
+				// push();
+					// strokeWeight(4);
+					// stroke(0, 255, 0);
+					// point(this.memory.x, this.memory.y);
+				// pop();
+			// }
 		// }
+		if (this.focus) this.highlight();
 	}
 
 	highlight() {
