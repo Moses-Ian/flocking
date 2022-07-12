@@ -51,7 +51,7 @@ function setup() {
 	});
 
 	//create boids
-	for(let i=0; i<200; i++)
+	for(let i=0; i<150; i++)
 		flock.push(new Boid());
 	qt = new QuadTree(boundary);
 	flock.forEach(boid => qt.insert(boid));
@@ -69,13 +69,14 @@ function setup() {
 	checkboxes.push(createCheckbox('Boid QuadTree', false));
 	checkboxes.push(createCheckbox('Obstacle QuadTree (Queried)', false));
 	checkboxes.push(createCheckbox('Obstacle QuadTree (Full)', false));
+	checkboxes.push(createCheckbox('Collisions', false));
+	
 	flock[0].focus = true;
 
 	createP(`Alignment Weight: ${nf(alignmentWeight, 0, 2)}`);
 	createP(`Cohesion Weight: ${nf(cohesionWeight, 0, 2)}`);
 	createP(`Separation Weight: ${nf(separationWeight, 0, 2)}`);
 	// createP(`Avoidance Weight: ${avoidanceWeight}`);
-	
 }
 
 function draw() {
@@ -87,7 +88,10 @@ function draw() {
 		qtb.show();
 	
 	//obstacles
-	obstacles.forEach(obst => obst.show());
+	obstacles.forEach(obst => {
+		obst.show();
+		// obst.showTriangles();
+	});
 	
 	//boids
 	let testRange;
