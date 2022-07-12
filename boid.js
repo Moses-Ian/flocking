@@ -11,6 +11,7 @@ class Boid {
 		
 		//ray stuff 2
 		this.ray = new Ray(this.position, this.velocity.heading());
+		let memory;
 
 		//ray stuff
 		// let spacing = PI / 10;
@@ -34,7 +35,7 @@ class Boid {
 	}
 	
 	speedUp() {
-		let steering = this.velocity.copy().setMag(this.maxSpeed);
+		let steering = this.velocity.copy().mult(1.5);
 		return steering;
 	}
 	
@@ -99,9 +100,19 @@ class Boid {
 	
 	avoidance(walls) {
 		let closest = this.look(walls);
-		if (!closest) return createVector();
+		if (!closest) {
+			this.memory = null;
+			return createVector();
+		}
 		let {pt, wall} = closest;
-		let wallVector = p5.Vector.sub(wall.a, wall.b);
+		let wallVector;
+		if (!this.memory) {
+			this.memory = pt;
+			wallVector = p5.Vector.sub(wall.a, wall.b);
+		} else {
+			wallVector = p5.Vector.sub(this.memory, pt);
+		} 
+		
 		let angle = this.velocity.angleBetween(wallVector);
 		let desired;
 		if (abs(angle) > HALF_PI && abs(angle) < PI+HALF_PI) {
@@ -211,6 +222,13 @@ class Boid {
 		
 		// this.rays.forEach(ray => ray.show());
 		// this.ray.show();
+		// if (this.memory) {
+			// push();
+				// strokeWeight(4);
+				// stroke(0, 255, 0);
+				// point(this.memory.x, this.memory.y);
+			// pop();
+		// }
 	}
 
 	highlight() {

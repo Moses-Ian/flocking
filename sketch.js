@@ -39,7 +39,7 @@ function setup() {
 
 	//create obstacles
 	qtb = new QuadTreeBoundaries(boundary);
-	for (let i=0; i<5; i++) {
+	for (let i=0; i<8; i++) {
 		obstacles.push(new Obstacle());
 	}
 	obstacles.forEach(obst => {

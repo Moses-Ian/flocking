@@ -18,7 +18,7 @@ class Ray {
 			wall.b, 
 			true
 		); 
-		return hit;
+		return createVector(hit.x, hit.y);
 	}
 	
 	rotate(angle) {
