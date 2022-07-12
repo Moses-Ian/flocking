@@ -31,13 +31,8 @@ function setup() {
 	alignmentWeight = random(.56, .80);
 	cohesionWeight = random(.07, .24);
 	separationWeight = random(.18, .21);
+	avoidanceWeight = 2;
 
-	// createP(`
-		// ${nf(alignmentWeight, 0, 2)}
-		// ${nf(cohesionWeight, 0, 2)}
-		// ${nf(separationWeight, 0, 2)}`
-	// );
-	
 	alignmentPerception = random(59, 76);
 	cohesionPerception = 127;
 	separationPerception = random(168, 189);
@@ -61,6 +56,9 @@ function setup() {
 	qt = new QuadTree(boundary);
 	flock.forEach(boid => qt.insert(boid));
 	
+	createP('Flocking Simulation with Obstacle Avoidance in p5.js').style('text-decoration', 'underline');
+	createP('by Ian Moses');
+	
 	boidCountP = createP(`Number of Boids: 150`);
 	boidCountSlider = createSlider(0, 19, 11);
 	oldCount = 11;
@@ -72,6 +70,12 @@ function setup() {
 	checkboxes.push(createCheckbox('Obstacle QuadTree (Queried)', false));
 	checkboxes.push(createCheckbox('Obstacle QuadTree (Full)', false));
 	flock[0].focus = true;
+
+	createP(`Alignment Weight: ${nf(alignmentWeight, 0, 2)}`);
+	createP(`Cohesion Weight: ${nf(cohesionWeight, 0, 2)}`);
+	createP(`Separation Weight: ${nf(separationWeight, 0, 2)}`);
+	// createP(`Avoidance Weight: ${avoidanceWeight}`);
+	
 }
 
 function draw() {

@@ -201,7 +201,7 @@ class Boid {
 		alignment.mult(alignmentWeight);
 		cohesion.mult(cohesionWeight);
 		separation.mult(separationWeight);
-		avoidance.mult(1);
+		avoidance.mult(avoidanceWeight);
 		
 		this.acceleration = speedUp;
 		this.acceleration.add(alignment);
