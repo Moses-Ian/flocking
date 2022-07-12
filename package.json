@@ -1,15 +1,14 @@
 {
   "name": "flocking",
   "version": "1.0.0",
-  "description": "",
+  "description": "Flocking Simulation with Obstacle Avoidance in p5.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "browser-sync start --server -f -w",
-	"deploy": "gh-pages -d dist"
+	"deploy": "gh-pages -d ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Ian Moses",
   "license": "ISC",
   "devDependencies": {
     "gh-pages": "^4.0.0"
