@@ -9,7 +9,7 @@ This project was created as an attempt to merge several interesting algorithms t
 ## Link
 
 You can view the deployed page here:
-[link]
+https://moses-ian.github.io/flocking/
 
 ## Usage
 
@@ -28,6 +28,8 @@ Each boid tries at every frame to do 5 things:
 - Cohese with nearby boids
 - Separate from nearby boids
 - Avoid Obstacles
+
+Each of these represents a force, and accumulates the boid's acceleration for this frame. The acceleration is the limited to a maximum, to simulate a real bird's ability to only generate a certain amount of thrust.
 
 ### Speed Up
 
