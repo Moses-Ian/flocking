@@ -122,7 +122,7 @@ class Boid {
 		}
 		desired.setMag(this.velocity.mag());
 		let steering = p5.Vector.sub(desired, this.velocity);
-		let brakes = this.velocity.copy().mult(-this.maxSpeed);
+		let brakes = this.velocity.copy().mult(-1);
 		steering.add(brakes);
 		return steering;
 	}
@@ -155,38 +155,6 @@ class Boid {
 		return closest;
 	}
 
-	// this will be more useful when i start doing a render view
-	// look(walls) {
-		// let points = [];
-		// this.rays.forEach((ray, index) => {
-			// let record = Infinity;
-			// let closest = null;
-			// walls.forEach(wall => {
-				// const pt = ray.cast(wall);
-				// if (pt.x) {
-					// const d = dist(this.position.x, this.position.y, pt.x, pt.y);
-					// if (d < record) {
-						// record = d;
-						// closest = pt;
-					// }
-				// }
-			// });
-			// if (closest) {
-				// let point = createVector(closest.x, closest.y);
-				// point.front = index >= this.rays.length / 2;
-				// points.push(point);
-				// ray.show(closest);
-			// }
-		// });
-		// return points;
-	// }
-	
-	// rotateRays(angle) {
-		// this.rays.forEach(ray => {
-			// ray.rotate(angle);
-		// });
-	// }
-	
 	rotateRay(angle) {
 		this.ray.rotate(angle);
 	}
@@ -232,7 +200,7 @@ class Boid {
 	}
 	
 	flock(boids, obstacles) {
-		let speedUp = this.speedUp();
+		// let speedUp = this.speedUp();
 		let alignment = this.align(boids);
 		let cohesion = this.cohesion(boids);
 		let separation = this.separation(boids);
@@ -243,12 +211,13 @@ class Boid {
 		separation.mult(separationWeight);
 		avoidance.mult(avoidanceWeight);
 		
-		this.acceleration = speedUp;
+		// this.acceleration = speedUp;
+		this.acceleration.mult(0);
 		this.acceleration.add(alignment);
 		this.acceleration.add(cohesion);
 		this.acceleration.add(separation);
 		this.acceleration.add(avoidance);
-		this.acceleration.limit(this.maxForce);
+		this.acceleration.git limit(this.maxForce);
 	}
 	
 	update() {
