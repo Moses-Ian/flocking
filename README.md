@@ -9,6 +9,7 @@ This project was created as an attempt to merge several interesting algorithms t
 ## Link
 
 You can view the deployed page here:
+
 https://moses-ian.github.io/flocking/
 
 ## Usage
