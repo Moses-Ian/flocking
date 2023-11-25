@@ -30,8 +30,8 @@ function setup() {
 	//these random ranges were determined experimentally
 	alignmentWeight = random(.56, .80);
 	cohesionWeight = random(.07, .24);
-	separationWeight = random(.18, .21);
-	avoidanceWeight = 2;
+	separationWeight = random(.19, .21);
+	avoidanceWeight = 5;
 
 	alignmentPerception = random(59, 76);
 	cohesionPerception = 127;
