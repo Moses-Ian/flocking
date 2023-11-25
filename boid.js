@@ -217,7 +217,7 @@ class Boid {
 		this.acceleration.add(cohesion);
 		this.acceleration.add(separation);
 		this.acceleration.add(avoidance);
-		this.acceleration.git limit(this.maxForce);
+		this.acceleration.limit(this.maxForce);
 	}
 	
 	update() {
