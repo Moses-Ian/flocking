@@ -7,6 +7,7 @@ class Boid {
 		this.acceleration = createVector();
 		this.maxForce = .05;
 		this.maxSpeed = 4;
+		this.maxTurn = .12;
 		this.r = boidSize;
 		
 		//ray stuff 2
@@ -224,10 +225,19 @@ class Boid {
 		let oldVelocity = createVector(this.velocity.x, this.velocity.y);
 		this.position.add(this.velocity);
 		this.collisions();
+		this.maxRotation();
 		this.velocity.add(this.acceleration);
 		this.velocity.limit(this.maxSpeed);
 		this.rotateRay(oldVelocity.angleBetween(this.velocity));
 		// this.rotateRays(oldVelocity.angleBetween(this.velocity));
+	}
+	
+	maxRotation() {
+		let heading = this.velocity.copy().normalize();
+		let accHeading = heading.copy().mult(this.acceleration.dot(heading));
+		let accTurning = this.acceleration.copy().sub(accHeading);
+		accTurning.limit(this.maxTurn);
+		this.acceleration = accTurning.add(accHeading);
 	}
 	
 	show() {
