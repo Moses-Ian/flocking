@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "browser-sync start --server -f -w",
-	"deploy": "gh-pages -d ."
+    "deploy": "gh-pages -d ."
   },
   "keywords": [],
   "author": "Ian Moses",
   "license": "ISC",
   "devDependencies": {
     "gh-pages": "^4.0.0"
+  },
+  "dependencies": {
+    "browser-sync": "^3.0.2"
   }
 }
