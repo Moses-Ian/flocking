@@ -23,6 +23,7 @@ class Ray {
 	
 	rotate(angle) {
 		this.dir.rotate(angle);
+		return this;
 	}
 	
 	getLine() {
@@ -36,6 +37,10 @@ class Ray {
 				y: this.pos.y + this.dir.y
 			}
 		}
+	}
+	
+	copy() {
+		return new Ray(this.pos.copy(), this.dir.heading());
 	}
 	
 	show(pt) {

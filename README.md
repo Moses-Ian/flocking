@@ -52,13 +52,13 @@ Boids try to maintain distance between themselves and their neighbors.
 
 ### Avoidance
 
-When boids see an obstacle, they try to align their velocity in the direction of the wall. In a naive approach, they end up being 'funnelled' into corners. If they remember the first location where they saw a wall, then they can instead try to align their velocity in the direction of a line created by their remembered point and the point where they currently see the wall.
+Boids check for obstacles by shooting a ray in the direction of their velocity. If they see an obstacle, they shoot two more rays at 15 degrees to either side. If either ray collides with no walls, they turn in the direction of that ray. If both see walls, then they turn in the direction of the ray whose collision point is farther away.
 
 This is my favorite to visualize.
 
 ### Collision
 
-Each obstacle is made up of a set of triangles. Each triangle has (x1, y1) as the obstacle's center, and (x2,y2) (x3,y3) make up the edge. Each frame, each boid is checked against each triangle for collision. If they collide, the boid is moved away. The direction is set by the difference between the boid's position and the triangle's (x1,y1). The magnitude is set by the distance between the boid's position and the line set by (x2,y2), (x3,y3). The position vector is then adjusted by that movement vector.
+Each obstacle is made up of a set of triangles. Each triangle has (x1, y1) as the obstacle's center, and (x2,y2) (x3,y3) make up the edge. Each frame, each boid is checked against each triangle for collision. If they collide, the boid is moved away. It is pushed back in the direction of its velocity and pushed back far enough that its front point is 0.1 pixels away from the edge.
 
 ## Brief Explanation of the QuadTree
 
